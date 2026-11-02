@@ -1,4 +1,4 @@
-public class Armas 
+public class Armas
 {
     String nombre;
     int danoExtra;
@@ -7,4 +7,10 @@ public class Armas
         this.nombre = nombre;
         this.danoExtra = danoExtra;
     }
+
+  public int getDaño() {
+
+    return this.danoExtra;
+  }
 }
+
