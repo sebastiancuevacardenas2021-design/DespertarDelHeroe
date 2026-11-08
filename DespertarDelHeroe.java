@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class DespertarDelHeroe {
+        static final int PUNTOS_POR_ENEMIGO = 100;
     //Bienvenida al juego
     public static void main(String[] args) {
         System.out.println("=====================================");
@@ -14,13 +15,32 @@ public class DespertarDelHeroe {
             opcion = leerOpcion(teclado, 1, 4);
             switch (opcion) {
                 case 1:
+                    System.out.println("Bienvenido," + pedirNombre(teclado) + ".");
                     int[] pociones = crearInventario();
-                    int cantidad = Caballero.NUMERO_POCIONES;
-                    mostrarInventario(pociones, cantidad);
-                    cantidad = retirarPocion(pociones, cantidad);
-                    mostrarInventario(pociones, cantidad);
-                    System.out.println("Bienvenido, " + pedirNombre(teclado) + ".");
-                    break;
+                    int[] heroe = {Caballero.VIDA_MAXIMA, Caballero.NUMERO_POCIONES};
+                    String[] nombre = {"Goblin", "Orco", "Rey Demonio"};
+                    int[] vidas = {Enemigos.GOBLIN_VIDA, Enemigos.ORCO_VIDA, Enemigos.REY_DEMONIO_VIDA};
+                    int[] danosMin = {Enemigos.GOBLIN_DANO_MINIMO, Enemigos.ORCO_DANO_MINMO, Enemigos.REY_DEMONIO_MINIMO};
+                    int[] danoMax = {Enemigos.GOBLIN_DANO_MAXIMO, Enemigos.ORCO_DANO_MAXIMO, Enemigos.REY_DEMONIO_MAXIMO};
+                    
+                    int derrotados = 0;
+                    int resultado = 1;
+                    for (int i = 0; i < nombre.length && resultado == 1; i++) {
+                        resultado = simularCombate(teclado, heroe, pociones, nombre[i], vidas[i], danosMin[i], danoMax[i]);
+                        if (resultado == 1) {
+                            derrotados++;
+                        }
+                    }
+
+                    int puntos = derrotados * PUNTOS_POR_ENEMIGO;
+                    if (derrotados == nombre.length) {
+                       puntos += heroe[0];
+                       System.out.println("VICTORIA! HAS COMPLETADO LA AVENTURA.");
+                    } else if (resultado == 0) {
+                       System.out.println("DERROTA");
+                    }
+                    System.out.println("Puntos: " + puntos);
+                    break;                
                 case 2:
                     System.out.println("(El ranking se hara mas adelante)");
                     break;
@@ -127,5 +147,58 @@ public class DespertarDelHeroe {
         System.out.println("- 100 puntos por cada enemigo derrotado.");
         System.out.println("- Si ganas la aventura, se suma de tu vida restante.");
     }
+    static int simularCombate(Scanner teclado, int[] heroe, int[] pociones,
+                              String nombreEnemigo, int vidaEnemigo, int danoMin, int danoMax) {
+        System.out.println("");
+        System.out.println("Aparece un " + nombreEnemigo + "! (vida: " + vidaEnemigo + ")");
 
+        while (heroe[0] > 0 && vidaEnemigo > 0) {
+            System.out.println("");
+            System.out.println("Tu vida: " + heroe[0] + " | " + nombreEnemigo + ":" + vidaEnemigo);
+            System.out.println("1. Atacar 2.Usar pocion 3. Ver inventario 4. Abandonar");
+            int opcion = leerOpcion(teclado, 1,4);
+            boolean turnoValido = false;
+
+            switch (opcion) {
+                case 1:
+                    int dano = calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MINIMO);
+                    vidaEnemigo -= dano;
+                    System.out.println("Golpeas al " + nombreEnemigo + "y le haces " + dano + "de dano.");
+                    turnoValido = true;
+                    break;
+                case 2:
+                    if (heroe[1] == 0) {
+                        System.out.println("No tienes pociones.");
+                    } else if (heroe[0] == Caballero.VIDA_MAXIMA) {
+                        System.out.println("Tu vida ya esta completa.");
+                    } else {
+                        heroe[1] = retirarPocion(pociones, heroe[1]);
+                        heroe[0] = Math.min(Caballero.DANO_MAXIMO, heroe[0] + Caballero.CURACION_POCION);
+                        System.out.println("Usas una pocion. Vida: " + heroe[0]);
+                        turnoValido = true;
+                    }
+                    break;
+                case 3:
+                    mostrarInventario(pociones, heroe[1]);
+                    break;
+                case 4:
+                    System.out.println("Abandonas la partida.");
+                    return -1;                      
+            }
+            //Ataque del enemigo
+            if (turnoValido && vidaEnemigo > 0) {
+               int danoEnemigo = calcularDano(danoMin, danoMax);
+               if (heroe[0] < 0) {
+                   heroe[0] = 0;
+               }
+               System.out.println("El " + nombreEnemigo + " te hace " + danoEnemigo + " de damo.");
+            }
+        }
+        if (heroe[0] > 0) {
+            System.out.println("Has derrotado al " + nombreEnemigo + "!");
+            return 1;
+        }
+        System.out.println("Has caido en combate...");
+        return 0;
+    }
 }
