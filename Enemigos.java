@@ -1,36 +1,16 @@
-public class Enemigos 
-{
-    String nombre;
-    int VIDA_ACTUAL;
-    int VIDA_MAXIMA;
-    int DANO_MINIMO;
-    int DANO_MAXIMO;
-   
-    //Constructor del enemigo 
-   public Enemigos(String nombre, int VIDA_MAXIMA, int DANO_MINIMO, int DANO_MAXIMO){
-    this.nombre = nombre;
-    this.VIDA_MAXIMA = VIDA_MAXIMA;
-    this.VIDA_ACTUAL = VIDA_MAXIMA;
-    this.DANO_MINIMO = DANO_MINIMO;
-    this.DANO_MAXIMO = DANO_MAXIMO;
-   }
+public class Enemigos {
+  //==== GOBLIN ====
+  static final int GOBLIN_VIDA = 40;
+  static final int GOBLIN_DANO_MINIMO = 5;
+  static final int GOBLIN_DANO_MAXIMO = 15;
 
-   //Meteodo para atacar
-   public int atacar() {
-    return (int) (Math.random() * (DANO_MAXIMO - DANO_MINIMO + 1)) + DANO_MINIMO;
-   }
+  //==== ORCO ====
+  static final int ORCO_VIDA = 60;
+  static final int ORCO_DANO_MINMO = 5;
+  static final int ORCO_DANO_MAXIMO = 15;
 
-   //Metodo para atacar al caballero 
-   public void recibirDano(int cantidad) {
-    this.VIDA_ACTUAL -=cantidad;
-    if(this.VIDA_ACTUAL < 0) {
-       this.VIDA_ACTUAL = 0; 
-    }
-  } 
-
-  //Metodo para ver si el caballero esta vivo
-  public boolean estaVivo() {
-    return this.VIDA_ACTUAL > 0;
-  }
-
+  //==== REY DEMONIO ====
+  static final int REY_DEMONIO_VIDA = 80;
+  static final int REY_DEMONIO_MINIMO = 5;
+  static final int REY_DEMONIO_MAXIMO = 15;
 }
