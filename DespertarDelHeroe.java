@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class DespertarDelHeroe {
-
+    //Bienvenida al juego
     public static void main(String[] args) {
         System.out.println("=====================================");
         System.out.println("       EL DESPERTAR DEL HEROE");
@@ -14,7 +14,11 @@ public class DespertarDelHeroe {
             opcion = leerOpcion(teclado, 1, 4);
             switch (opcion) {
                 case 1:
-                    System.out.println("Dano de prueba: " + calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MAXIMO));
+                    int[] pociones = crearInventario();
+                    int cantidad = Caballero.NUMERO_POCIONES;
+                    mostrarInventario(pociones, cantidad);
+                    cantidad = retirarPocion(pociones, cantidad);
+                    mostrarInventario(pociones, cantidad);
                     System.out.println("Bienvenido, " + pedirNombre(teclado) + ".");
                     break;
                 case 2:
@@ -31,7 +35,7 @@ public class DespertarDelHeroe {
         teclado.close();
     }
 
-    // Pide el nombre del heroe y no termina hasta que no este vacio.
+    // Nombre del heroe
     static String pedirNombre(Scanner teclado) {
         String nombre = "";
         while (nombre.isEmpty()) {
@@ -44,7 +48,7 @@ public class DespertarDelHeroe {
         return nombre;
     }
 
-    // Muestra las opciones del menu principal.
+    // Menu principal
     static void mostrarMenu() {
         System.out.println("");
         System.out.println("=== MENU PRINCIPAL ===");
@@ -54,7 +58,7 @@ public class DespertarDelHeroe {
         System.out.println("4. Salir");
     }
 
-    // Lee un numero entre minimo y maximo. Repite hasta que sea valido.
+    // Lee el numero que pongas, si esta fuera de rango te lo dice 
     static int leerOpcion(Scanner teclado, int minimo, int maximo) {
         int opcion = 0;
         boolean valida = false;
@@ -75,8 +79,37 @@ public class DespertarDelHeroe {
         return opcion;
     }
 
-    // Devuelve un numero al azar entre minimo y maximo (ambos incluidos).
+    // Devuelve un numero al azar entre minimo y maximo
     static int calcularDano(int minimo, int maximo) {
         return (int) (Math.random() * (maximo - minimo + 1)) + minimo;
+    }
+    //Inventario 
+    static int[] crearInventario() {
+        int[] pociones = new int[Caballero.NUMERO_POCIONES];
+        for (int i = 0; i < pociones.length; i++) {
+            pociones[i] = Caballero.CURACION_POCION;
+        }
+        return pociones;
+    }
+
+    //Muestra solo las pociones que tienes
+    static void mostrarInventario(int[] pociones, int cantidad) {
+        System.out.println("---INVENTARIO---");
+        if (cantidad == 0) {
+            System.out.println("No te quedan pociones");
+        }
+        for (int i = 0; i < cantidad; i++) {
+            System.out.println("Pocion " + (i + 1) + ": cura " + pociones[i] + " de vida");
+        }
+    }
+    
+   //Retira una pocion y devuelve cuantas quedan 
+   static int retirarPocion(int[] pociones, int cantidad) {
+        if (cantidad <= 0) {
+            System.out.println("No tienes pociones.");
+            return 0;
+        }
+        pociones[cantidad - 1] = 0;
+        return cantidad - 1;
     }
 }
