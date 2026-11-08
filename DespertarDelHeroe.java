@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
-public class DespertarDelHeroe {
+public class DespertarDelHeroe 
+{
+        static final int MAX_RANKING = 10;
         static final int PUNTOS_POR_ENEMIGO = 100;
     //Bienvenida al juego
     public static void main(String[] args) {
@@ -9,13 +11,17 @@ public class DespertarDelHeroe {
         System.out.println("=====================================");
 
         Scanner teclado = new Scanner(System.in);
+        String[] rankingNombres = new String[MAX_RANKING];
+        int[] rankingPuntos = new int[MAX_RANKING];
+        int rankingCantidad = 0;
         int opcion;
         do {
             mostrarMenu();
             opcion = leerOpcion(teclado, 1, 4);
             switch (opcion) {
                 case 1:
-                    System.out.println("Bienvenido," + pedirNombre(teclado) + ".");
+                    String nombreHeroe = pedirNombre(teclado);
+                    System.out.println("Bienvenido, " + nombreHeroe + ".");
                     int[] pociones = crearInventario();
                     int[] heroe = {Caballero.VIDA_MAXIMA, Caballero.NUMERO_POCIONES};
                     String[] nombre = {"Goblin", "Orco", "Rey Demonio"};
@@ -40,9 +46,10 @@ public class DespertarDelHeroe {
                        System.out.println("DERROTA");
                     }
                     System.out.println("Puntos: " + puntos);
+                    rankingCantidad = registrarPuntuacion(rankingNombres, rankingPuntos, rankingCantidad, nombreHeroe, puntos);
                     break;                
                 case 2:
-                    System.out.println("(El ranking se hara mas adelante)");
+                    mostrarRanking(rankingNombres, rankingPuntos, rankingCantidad);
                     break;
                 case 3:
                     mostrarAyuda();;
@@ -161,21 +168,21 @@ public class DespertarDelHeroe {
 
             switch (opcion) {
                 case 1:
-                    int dano = calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MINIMO);
+                    int dano = calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MAXIMO);
                     vidaEnemigo -= dano;
-                    System.out.println("Golpeas al " + nombreEnemigo + "y le haces " + dano + "de dano.");
+                    System.out.println("Golpeas al " + nombreEnemigo + " y le haces " + dano + " de dano.");
                     turnoValido = true;
                     break;
                 case 2:
                     if (heroe[1] == 0) {
-                        System.out.println("No tienes pociones.");
+                    System.out.println("No tienes pociones.");
                     } else if (heroe[0] == Caballero.VIDA_MAXIMA) {
-                        System.out.println("Tu vida ya esta completa.");
+                    System.out.println("Tu vida ya esta completa.");
                     } else {
-                        heroe[1] = retirarPocion(pociones, heroe[1]);
-                        heroe[0] = Math.min(Caballero.DANO_MAXIMO, heroe[0] + Caballero.CURACION_POCION);
-                        System.out.println("Usas una pocion. Vida: " + heroe[0]);
-                        turnoValido = true;
+                    heroe[1] = retirarPocion(pociones, heroe[1]);
+                    heroe[0] = Math.min(Caballero.VIDA_MAXIMA, heroe[0] + Caballero.CURACION_POCION);
+                    System.out.println("Usas una pocion. Vida: " + heroe[0]);
+                    turnoValido = true;
                     }
                     break;
                 case 3:
@@ -188,6 +195,7 @@ public class DespertarDelHeroe {
             //Ataque del enemigo
             if (turnoValido && vidaEnemigo > 0) {
                int danoEnemigo = calcularDano(danoMin, danoMax);
+               heroe[0] -= danoEnemigo;
                if (heroe[0] < 0) {
                    heroe[0] = 0;
                }
@@ -201,4 +209,40 @@ public class DespertarDelHeroe {
         System.out.println("Has caido en combate...");
         return 0;
     }
+    //Ranking del orden de mayor a menor
+    static int registrarPuntuacion(String[] nombres, int[] puntos, int cantidad, String nombre, int puntuacion) {
+        int posicion = cantidad;
+        for (int i = 0; i < cantidad; i++) {
+            if (puntuacion > puntos[i]) {
+                posicion = i;
+                break;
+            }
+        }
+        if (posicion >= MAX_RANKING) {
+            System.out.println("Tu puntacion no entra en el ranking.");
+            return cantidad;
+        }
+        int nuevaCantidad = Math.min(cantidad + 1, MAX_RANKING);
+        for (int i = nuevaCantidad - 1; i > posicion; i--) {
+            nombres[i] = nombres[i - 1];
+            puntos[i] = puntos[i - 1];
+        }
+        nombres[posicion] = nombre;
+        puntos[posicion] = puntuacion;
+        return nuevaCantidad;
+    }
+
+    //Muestra el reaking, si esta vacio te avisara 
+       static void mostrarRanking(String[] nombres, int[] puntos, int cantidad) {
+        System.out.println("");
+        System.out.println("==== REAKING ====");
+        if (cantidad == 0) {
+            System.out.println("Aun no hay puntaciones.");
+        }
+        for (int i = 0; i < cantidad; i++) {
+            System.out.println((i + 1) + ". " + nombres[i] + " - " + puntos[i] + " puntos");
+        }
+    
+    }
+
 }
