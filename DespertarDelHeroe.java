@@ -25,7 +25,7 @@ public class DespertarDelHeroe {
                     System.out.println("(El ranking se hara mas adelante)");
                     break;
                 case 3:
-                    System.out.println("(La ayuda se hara mas adelante)");
+                    mostrarAyuda();;
                     break;
                 case 4:
                     System.out.println("Hasta pronto.");
@@ -112,4 +112,20 @@ public class DespertarDelHeroe {
         pociones[cantidad - 1] = 0;
         return cantidad - 1;
     }
+    //Las reglas
+    static void mostrarAyuda() {
+        System.out.println("");
+        System.out.println("==== AYUDA ====");
+        System.out.println("REGLAS");
+        System.out.println("-Debes vencer a 3 enemigos seguidos: Goblin, Orco y Rey Demonio.");
+        System.out.println("Empiezas con " + Caballero.DANO_MINIMO + " y" + Caballero.DANO_MAXIMO + " de dano.");  
+        System.out.println("ACCIONES EN EL COMBATE");
+        System.out.println("- Atacar: Golpeas al nemigo y el responde.");
+        System.out.println("- Usar pocion: recuperas " + Caballero.CURACION_POCION + "de vida (maximo " + Caballero.VIDA_MAXIMA + ").");
+        System.out.println("- Abandonar: terminas la partida.");
+        System.out.println("PUNTACION;");
+        System.out.println("- 100 puntos por cada enemigo derrotado.");
+        System.out.println("- Si ganas la aventura, se suma de tu vida restante.");
+    }
+
 }
