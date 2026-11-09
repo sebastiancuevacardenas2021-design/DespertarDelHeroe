@@ -52,7 +52,7 @@ public class DespertarDelHeroe
                     mostrarRanking(rankingNombres, rankingPuntos, rankingCantidad);
                     break;
                 case 3:
-                    mostrarAyuda();;
+                    mostrarAyuda();
                     break;
                 case 4:
                     System.out.println("Hasta pronto.");
@@ -150,7 +150,7 @@ public class DespertarDelHeroe
         System.out.println("- Atacar: Golpeas al nemigo y el responde.");
         System.out.println("- Usar pocion: recuperas " + Caballero.CURACION_POCION + "de vida (maximo " + Caballero.VIDA_MAXIMA + ").");
         System.out.println("- Abandonar: terminas la partida.");
-        System.out.println("PUNTACION;");
+        System.out.println("PUNTUACION;");
         System.out.println("- 100 puntos por cada enemigo derrotado.");
         System.out.println("- Si ganas la aventura, se suma de tu vida restante.");
     }
@@ -199,7 +199,7 @@ public class DespertarDelHeroe
                if (heroe[0] < 0) {
                    heroe[0] = 0;
                }
-               System.out.println("El " + nombreEnemigo + " te hace " + danoEnemigo + " de damo.");
+               System.out.println("El " + nombreEnemigo + " te hace " + danoEnemigo + " de dano.");
             }
         }
         if (heroe[0] > 0) {
@@ -208,6 +208,36 @@ public class DespertarDelHeroe
         }
         System.out.println("Has caido en combate...");
         return 0;
+    }
+
+    //
+        static int jugarPartida(Scanner teclado) {
+            int[] pociones = crearInventario();
+            int[] heroe = {Caballero.VIDA_MAXIMA, Caballero.NUMERO_POCIONES};
+            String[] nombresEnemigos = {"Goblin", "Orco", "Rey Demonio"};
+            int[] vidas = {Enemigos.GOBLIN_VIDA, Enemigos.ORCO_VIDA, Enemigos.REY_DEMONIO_VIDA};
+            int[] danosMin = {Enemigos.GOBLIN_DANO_MINIMO, Enemigos.ORCO_DANO_MINMO, Enemigos.REY_DEMONIO_MINIMO};
+            int[] danoMax = {Enemigos.GOBLIN_DANO_MAXIMO, Enemigos.ORCO_DANO_MAXIMO, Enemigos.REY_DEMONIO_MAXIMO};
+
+            int derrotados = 0;
+            int resultado = 1;
+            for (int i = 0; i < nombresEnemigos.length && resultado == 1; i ++) {
+                resultado = simularCombate(teclado, heroe, pociones, nombresEnemigos[i], vidas[i], danosMin[i], danoMax[i]);
+                if (resultado == 1)  {
+                    derrotados ++;
+                }
+            }
+
+            int puntos = derrotados * PUNTOS_POR_ENEMIGO;
+            if (derrotados == nombresEnemigos.length) {
+                puntos += heroe[0];
+                System.out.println("¡¡¡VICTORIA!!! HAS COMPLETADO LA AVENTURA.");
+            } else if (resultado == 0) {
+                System.out.println("DERROTA");
+            }
+            System.out.println("Puntos: " + puntos);
+            return puntos;
+
     }
     //Ranking del orden de mayor a menor
     static int registrarPuntuacion(String[] nombres, int[] puntos, int cantidad, String nombre, int puntuacion) {
@@ -232,12 +262,12 @@ public class DespertarDelHeroe
         return nuevaCantidad;
     }
 
-    //Muestra el reaking, si esta vacio te avisara 
+    //Muestra el RANKING, si esta vacio te avisara 
        static void mostrarRanking(String[] nombres, int[] puntos, int cantidad) {
         System.out.println("");
-        System.out.println("==== REAKING ====");
+        System.out.println("==== RANKING ====");
         if (cantidad == 0) {
-            System.out.println("Aun no hay puntaciones.");
+            System.out.println("Aun no hay puntuacioneses.");
         }
         for (int i = 0; i < cantidad; i++) {
             System.out.println((i + 1) + ". " + nombres[i] + " - " + puntos[i] + " puntos");
