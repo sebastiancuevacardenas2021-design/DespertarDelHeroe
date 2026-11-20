@@ -13,7 +13,7 @@ public class DespertarDelHeroe
         Scanner teclado = new Scanner(System.in);
         String[] rankingNombres = new String[MAX_RANKING];
         int[] rankingPuntos = new int[MAX_RANKING];
-        int rankingCantidad = 0;
+        int rankingCantidad = RankingXML.cargar(rankingNombres, rankingPuntos);
         int opcion;
         do {
             mostrarMenu();
@@ -47,6 +47,8 @@ public class DespertarDelHeroe
                     }
                     System.out.println("Puntos: " + puntos);
                     rankingCantidad = registrarPuntuacion(rankingNombres, rankingPuntos, rankingCantidad, nombreHeroe, puntos);
+                    RankingXML.guardar(rankingNombres, rankingPuntos, rankingCantidad);
+                    RankingXML.actualizarHTML(rankingNombres, rankingPuntos, rankingCantidad);
                     break;                
                 case 2:
                     mostrarRanking(rankingNombres, rankingPuntos, rankingCantidad);
@@ -177,12 +179,47 @@ public class DespertarDelHeroe
             boolean turnoValido = false;
 
             switch (opcion) {
-                case 1:
-                    int dano = calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MAXIMO);
-                    vidaEnemigo -= dano;
-                    System.out.println("Golpeas al " + nombreEnemigo + " y le haces " + dano + " de dano.");
-                    turnoValido = true;
-                    break;
+                
+case 1:
+    System.out.println("=== ELIGE TU ARMA ===");
+    System.out.println("1. Espada de hierro (75% de acertar)");
+    System.out.println("2. Hacha de batalla (35% de acertar)");
+    System.out.println("3. Arco grande (80% de acertar)");
+
+    int armaElegida = leerOpcion(teclado, 1, 3);
+    int bonus = 0;
+    int probabilidad = 0;
+
+    switch (armaElegida) {
+        case 1:
+            bonus = Armas.ESPADA_BONUS;
+            probabilidad = Armas.ESPADA_PROBABILIDAD;
+            break;
+        case 2:
+            bonus = Armas.HACHA_BONUS;
+            probabilidad = Armas.HACHA_PROBABILIDAD;
+            break;
+        case 3:
+            bonus = Armas.ARCO_BONUS;
+            probabilidad = Armas.ARCO_PROBABILIDAD;
+            break;
+    }
+
+    int suerte = calcularDano(1, 100);
+
+    if (suerte <= probabilidad) {
+        int dano = calcularDano(Caballero.DANO_MINIMO, Caballero.DANO_MAXIMO);
+        dano += bonus;
+        vidaEnemigo -= dano;
+        System.out.println("Ataque acertado! Haces " + dano + " de dano.");
+    } else {
+        System.out.println("Has fallado el ataque! Haces 0 de dano.");
+    }
+
+    turnoValido = true;
+    break;
+
+                    
                 case 2:
                     if (heroe[1] == 0) {
                     System.out.println("No tienes pociones.");
