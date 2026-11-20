@@ -119,17 +119,27 @@ public class DespertarDelHeroe
         return pociones;
     }
 
-    //Muestra solo las pociones que tienes
+    
+    // Muestra las pociones y las tres armas
     static void mostrarInventario(int[] pociones, int cantidad) {
-        System.out.println("---INVENTARIO---");
+        System.out.println("===== INVENTARIO =====");
+
+        System.out.println("--- POCIONES ---");
         if (cantidad == 0) {
-            System.out.println("No te quedan pociones");
+            System.out.println("No te quedan pociones.");
         }
+
         for (int i = 0; i < cantidad; i++) {
             System.out.println("Pocion " + (i + 1) + ": cura " + pociones[i] + " de vida");
         }
+
+        System.out.println("--- ARMAS ---");
+        System.out.println("1. " + Armas.ESPADA_NOMBRE + " (+" + Armas.ESPADA_BONUS + " dano)");
+        System.out.println("2. " + Armas.HACHA_NOMBRE + " (+" + Armas.HACHA_BONUS + " dano)");
+        System.out.println("3. Arco grande (+" + Armas.ARCO_BONUS + " dano)");
     }
-    
+
+
    //Retira una pocion y devuelve cuantas quedan 
    static int retirarPocion(int[] pociones, int cantidad) {
         if (cantidad <= 0) {
